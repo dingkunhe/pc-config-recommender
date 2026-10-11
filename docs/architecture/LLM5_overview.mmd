@@ -1,0 +1,66 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "24px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#333333",
+    "lineColor": "#666666",
+    "textColor": "#222222"
+  }
+}}%%
+erDiagram
+    %% 用户与论坛核心
+    User ||--o{ Post : 发布
+    User ||--o{ Comment : 发表
+    User ||--|| Profile : 扩展资料
+
+    Post ||--o{ Comment : 包含
+    Comment o|--o{ Comment : 父子回复
+
+    %% 媒体与附件
+    Post ||--o{ PostImage : 图片
+    Post ||--o{ PostAttachment : 附件
+    Comment ||--o{ CommentImage : 图片
+    Comment ||--o{ CommentAttachment : 附件
+
+    %% 通知
+    User ||--o{ LikeNotification : 接收
+    User ||--o{ ReplyNotification : 接收
+    User ||--o{ SystemNotification : 接收
+
+    %% 举报
+    User ||--o{ Report : 发起
+    Post ||--o{ Report : 被举报
+    Comment ||--o{ Report : 被举报
+
+    %% 推荐系统
+    Hardware ||--o{ PriceHistory : 价格历史
+    Hardware ||--o{ HardwareWeightAdjustmentLog : 权重日志
+
+    User ||--o{ ChatSession : 会话
+    ChatSession ||--o{ ChatMessage : 消息
+
+    %% 实体声明（总览图不展开字段）
+    User
+    Profile
+    Post
+    Comment
+    PostImage
+    PostAttachment
+    CommentImage
+    CommentAttachment
+    LikeNotification
+    ReplyNotification
+    SystemNotification
+    Report
+
+    Hardware
+    PriceHistory
+    HardwareWeightAdjustmentLog
+    ChatSession
+    ChatMessage
+    ApiConfig
+    AuditApiConfig
+    PromptConfig
+    ScraperRun
+    RecommendedScheme

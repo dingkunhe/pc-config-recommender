@@ -1,0 +1,81 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '10px'}, 'flowchart': {'nodeSpacing': 10, 'rankSpacing': 25}}}%%
+flowchart TD
+    %% ========== 样式定义 ==========
+    classDef user fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
+    classDef frontend fill:#bbdefb,stroke:#1565c0,color:#0d47a1
+    classDef backend fill:#fff9c4,stroke:#f9a825,color:#f57f17
+    classDef admin fill:#f8bbd0,stroke:#ad1457,color:#880e4f
+
+    %% ========== 用户 ==========
+    subgraph User["👤 用户"]
+        U_enter(进入社区板块):::user
+        U_scroll[滚动加载更多]:::user
+        U_create(创建帖子<br>标题/正文/上传):::user
+        U_comment(发表评论/回复):::user
+        U_like(点赞):::user
+        U_notify(查看消息中心):::user
+        U_read[标记已读]:::user
+        U_report(举报内容):::user
+    end
+
+    %% ========== 论坛前端/后端 ==========
+    subgraph Frontend["🖥️ 前端/后端"]
+        F_list[分页展示帖子]:::frontend
+        F_save[(保存帖子到DB)]:::frontend
+        F_display[即时显示内容]:::frontend
+        F_comment[构建嵌套回复]:::frontend
+        F_like_record[记录点赞关系]:::frontend
+        F_notify_author[通知作者]:::frontend
+        F_msg_center[消息中心整理]:::frontend
+        F_mark_read[自动标为已读]:::frontend
+        F_report_ticket[生成举报工单]:::frontend
+    end
+
+    %% ========== 后台系统 ==========
+    subgraph Backend["⚙️ 后台系统"]
+        B_audit_job{定时内容审核}:::backend
+        B_violation[判定违规]:::backend
+        B_block[拦截并撤出]:::backend
+        B_sentiment[定期情感分析]:::backend
+        B_adjust_weight[调整推荐权重]:::backend
+    end
+
+    %% ========== 管理员 ==========
+    subgraph Admin["🛡️ 管理员"]
+        A_review(人工复核):::admin
+        A_action{执行操作}:::admin
+        A_restore[恢复]:::admin
+        A_delete[删除]:::admin
+        A_handle_report(核实举报工单):::admin
+    end
+
+    %% ========== 流程连接 ==========
+    U_enter --> F_list
+    F_list -->|滚动加载| U_scroll
+    U_scroll --> F_list
+
+    U_create --> F_save --> F_display
+
+    U_comment --> F_comment --> F_display
+
+    U_like --> F_like_record
+    F_like_record --> F_notify_author --> F_msg_center
+
+    U_notify --> F_msg_center
+    U_read --> F_mark_read --> F_msg_center
+
+    F_display -.->|异步定时| B_audit_job
+    B_audit_job -->|合规| F_display
+    B_audit_job -->|违规| B_violation --> B_block
+
+    U_report --> F_report_ticket --> A_handle_report
+
+    B_block --> A_review
+    A_review --> A_action
+    A_action -->|恢复| A_restore --> F_display
+    A_action -->|删除| A_delete --> B_block
+
+    B_sentiment --> B_adjust_weight
+
+    F_notify_author -->|通知| U_notify
+    F_msg_center -->|展示| U_notify

@@ -1,0 +1,81 @@
+# ============================================================
+#  智能电脑配置推荐系统 — Git 忽略规则
+#  凭据、运行时产物、超体积模型权重与论文材料均不入库
+# ============================================================
+
+# ---------- 环境变量与凭据（务必不要提交） ----------
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---------- Django ----------
+db.sqlite3
+*.sqlite3
+staticfiles/
+media/
+*.log
+
+# ---------- 大模型权重与向量库（本地生成，单文件 90MB+，不入库） ----------
+downloaded_models/
+backend_django/models/bge-small-zh-v1.5/
+backend_django/models/hf_cache/
+backend_django/vector_store/
+
+# ---------- Node / 前端构建产物 ----------
+node_modules/
+frontend/dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------- 编辑器 / 操作系统 ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---------- 论文、文献与演示材料（不随代码仓库分发） ----------
+论文/
+文献/
+2026/
+*.caj
+*.rar
+*.7z
+ZUFE_*.zip
+project.zip
+project.rar
+*.ttf
+*.otf
+*.pptx
+爬虫日志.txt
+_tmp_*
+屏幕截图*
+*.pdf
+
+# ---------- 与真实实现不符的旧版设计稿（保留在本地，不入库） ----------
+系统说明.md
+技术栈.txt

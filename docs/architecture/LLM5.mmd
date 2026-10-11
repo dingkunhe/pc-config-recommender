@@ -1,0 +1,189 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+        "fontSize": "22px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#333333",
+    "lineColor": "#666666",
+    "textColor": "#222222"
+  }
+}}%%
+erDiagram
+        User ||--o{ Post : 发布
+        User ||--o{ Comment : 评论
+        User ||--|| Profile : 资料
+        Post ||--o{ Comment : 含
+        Comment o|--o{ Comment : 回复
+        Post ||--o{ PostImage : 图
+        Post ||--o{ PostAttachment : 附
+        Comment ||--o{ CommentImage : 图
+        Comment ||--o{ CommentAttachment : 附
+        Hardware ||--o{ PriceHistory : 价格
+        Hardware ||--o{ HardwareWeightAdjustmentLog : 权重日志
+        User ||--o{ LikeNotification : 点赞通知
+        User ||--o{ ReplyNotification : 回复通知
+        User ||--o{ SystemNotification : 系统通知
+        User ||--o{ ChatSession : 会话
+        ChatSession ||--o{ ChatMessage : 消息
+        User ||--o{ Report : 举报
+        Post ||--o{ Report : 被举报
+        Comment ||--o{ Report : 被举报
+
+    User {
+        int 用户ID PK
+        string 用户名
+        string 密码
+    }
+
+    Hardware {
+        int 硬件ID PK
+        string 名称
+        string 类别
+        float 权重
+    }
+
+    PriceHistory {
+        int 记录ID PK
+        int 硬件ID FK
+        string 日期
+        float 价格
+    }
+
+    Post {
+        int 帖子ID PK
+        string 标题
+        string 板块
+        datetime 发布时间
+        string 审核状态
+    }
+
+    Comment {
+        int 评论ID PK
+        int 帖子ID FK
+        int 父评论ID FK
+        string 作者
+        datetime 发布时间
+    }
+
+    PostImage {
+        int 图片ID PK
+        int 帖子ID FK
+        string 文件
+        datetime 上传时间
+    }
+
+    PostAttachment {
+        int 附件ID PK
+        int 帖子ID FK
+        string 文件
+        datetime 上传时间
+    }
+
+    CommentImage {
+        int 图片ID PK
+        int 评论ID FK
+        string 文件
+        datetime 上传时间
+    }
+
+    CommentAttachment {
+        int 附件ID PK
+        int 评论ID FK
+        string 文件
+        datetime 上传时间
+    }
+
+    LikeNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 目标类型
+        int 目标ID
+        bool 已读
+    }
+
+    ReplyNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 目标类型
+        int 目标ID
+        bool 已读
+    }
+
+    SystemNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 标题
+        bool 已读
+    }
+
+    Profile {
+        int 资料ID PK
+        int 用户ID FK
+        string 昵称
+        bool 封禁状态
+    }
+
+    ApiConfig {
+        int 配置ID PK
+        string 名称
+        string 模型
+        bool 启用状态
+    }
+
+    AuditApiConfig {
+        int 配置ID PK
+        string 名称
+        string 模型
+        bool 启用状态
+    }
+
+    PromptConfig {
+        int 配置ID PK
+        text 推荐提示词
+        int 检索数
+        datetime 更新时间
+    }
+
+    ChatSession {
+        int 会话ID PK
+        int 用户ID FK
+        string 标题
+        datetime 更新时间
+    }
+
+    ChatMessage {
+        int 消息ID PK
+        int 会话ID FK
+        string 角色
+        datetime 创建时间
+    }
+
+    ScraperRun {
+        int 任务ID PK
+        datetime 开始时间
+        string 状态
+        datetime 结束时间
+    }
+
+    Report {
+        int 举报ID PK
+        string 举报类型
+        int 目标ID
+        int 举报人ID FK
+        string 状态
+    }
+
+    RecommendedScheme {
+        int 方案ID PK
+        string 标题
+        string 来源类型
+        int 来源ID
+    }
+
+    HardwareWeightAdjustmentLog {
+        int 日志ID PK
+        int 硬件ID FK
+        string 来源类型
+        float 变化值
+        datetime 创建时间
+    }

@@ -1,0 +1,22 @@
+Flask>=2.0
+SQLAlchemy>=1.4
+requests>=2.28
+beautifulsoup4>=4.11
+lxml>=4.9
+pandas>=2.0
+python-dotenv>=1.0
+# Optional: 用于向量检索/实验（安装请根据平台选择）
+# faiss-cpu
+flask-cors>=3.0
+django>=4.2
+django-cors-headers>=4.0
+pymysql>=1.0
+APScheduler>=3.10
+langchain>=0.2
+langchain-community>=0.2
+langchain-ollama>=0.1
+dashscope>=1.20
+chromadb>=0.5
+langchain-openai>=0.1
+openai>=1.0
+sentence-transformers>=2.7

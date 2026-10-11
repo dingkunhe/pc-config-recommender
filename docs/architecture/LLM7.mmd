@@ -1,0 +1,76 @@
+%%{init: {
+  "theme": "base",
+  "flowchart": { "curve": "monotoneY", "nodeSpacing": 38, "rankSpacing": 42 },
+  "themeVariables": {
+    "fontSize": "17px",
+    "primaryTextColor": "#1f2937",
+    "lineColor": "#6b7280"
+  }
+}}%%
+graph TD
+
+%% ===================== 路由与中间件层 =====================
+subgraph L1[路由与中间件层]
+direction TB
+MW( middleware.py<br/>请求前置拦截 / 封禁校验 )
+URLS( urls.py<br/>接口路由分发 / 映射到视图函数 )
+MW -->|请求预处理后放行| URLS
+end
+
+%% ===================== 视图/控制层 =====================
+subgraph L2[视图/控制层]
+direction TB
+VIEWS( views.py<br/>Http请求处理 / 参数校验 / 调用服务 / JSON响应<br/>用户认证、论坛交互、消息通知、举报处理、智能推荐、后台治理 )
+end
+
+%% ===================== 业务服务层 =====================
+subgraph L3[业务服务层]
+direction TB
+AIMOD( ai_moderation.py<br/>AI审核服务 / 提示词统一 / 模型调用 / 结果解析 )
+SCRAPER( scraper_service.py<br/>硬件爬取更新 / 状态管理 / 代理验证 / 反爬重试 )
+DAILY( task_daily_clean.py<br/>每日清洗 / 高赞方案提取 / 权重动态调整 )
+SCHED( scheduler.py<br/>APScheduler定时调度<br/>每日清洗 + 评论批量审核 )
+LLM( llm_client.py<br/>统一ChatOpenAI调用 / base_url规范化 / 参数兼容 / 错误返回 )
+HCLEAN( hardware_cleaner.py<br/>硬件数据清洗 / 类别推断 / 品牌型号规整 )
+end
+
+%% ===================== 数据持久层 =====================
+subgraph L4[数据持久层]
+direction TB
+MODELS( models.py<br/>用户、论坛、消息、硬件、配置、会话、日志等实体持久化 )
+end
+
+%% ===================== 关键依赖关系 =====================
+URLS -->|路由分发| VIEWS
+
+VIEWS -->|调用审核| AIMOD
+VIEWS -->|调用爬虫| SCRAPER
+VIEWS -->|调用大模型| LLM
+VIEWS -->|手动触发清洗| DAILY
+VIEWS -.触发/管理调度.-> SCHED
+
+SCRAPER -->|数据清洗复用| HCLEAN
+SCRAPER -->|调用统一LLM能力| LLM
+
+SCHED -->|定时执行| DAILY
+SCHED -->|定时执行| AIMOD
+
+%% 业务模块持久化依赖
+VIEWS --> MODELS
+AIMOD --> MODELS
+SCRAPER --> MODELS
+DAILY --> MODELS
+SCHED --> MODELS
+HCLEAN -.清洗后由调用方落库.-> MODELS
+LLM -.被业务调用后间接持久化.-> MODELS
+
+%% ===================== 样式分层 =====================
+classDef layerRoute fill:#eef6ff,stroke:#3b82f6,stroke-width:1.5px,color:#0f172a;
+classDef layerView  fill:#f3f4f6,stroke:#6b7280,stroke-width:1.5px,color:#111827;
+classDef layerSvc   fill:#eefcf3,stroke:#16a34a,stroke-width:1.5px,color:#052e16;
+classDef layerData  fill:#fff7ed,stroke:#ea580c,stroke-width:1.5px,color:#7c2d12;
+
+class MW,URLS layerRoute;
+class VIEWS layerView;
+class AIMOD,SCRAPER,DAILY,SCHED,LLM,HCLEAN layerSvc;
+class MODELS layerData;

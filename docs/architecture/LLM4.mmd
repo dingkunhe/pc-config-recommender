@@ -1,0 +1,99 @@
+graph TD
+    A(管理员登录) --> B(进入后台管理页面)
+    B --> C(身份校验通过)
+    C --> D(进入推荐系统后台管理控制台)
+    D --> E(按需切换功能标签页)
+
+    subgraph M[推荐系统后台管理控制台]
+        direction TB
+
+        subgraph T1[API配置]
+            direction TB
+            T1a(查看已配置的推荐主模型接口)
+            T1b(新增接口)
+            T1c(设定主要调用节点)
+            T1d(自动调整其他接口优先级)
+            T1a --> T1b --> T1c --> T1d
+        end
+
+        subgraph T2[审核系统]
+            direction TB
+            T2a(查看审核模型接口配置)
+            T2b(新增审核接口)
+            T2c(设定审核主接口)
+            T2d(自动调整其他审核接口优先级)
+            T2a --> T2b --> T2c --> T2d
+        end
+
+        subgraph T3[数据更新管理]
+            direction TB
+            T3a(设置采集数量)
+            T3b(启动爬虫任务)
+            T3c(轮询展示任务进度)
+            T3d(按需中断任务)
+            T3e(查看历史运行日志)
+            T3f(导出任务日志)
+            T3a --> T3b --> T3c
+            T3c --> T3d
+            T3c --> T3e --> T3f
+        end
+
+        subgraph T4[硬件数据]
+            direction TB
+            T4a(按类别品牌价格筛选硬件列表)
+            T4b(SQL文件导入)
+            T4c(数据结构规范化转换)
+            T4d(清理无效与重复数据)
+            T4e(数据库向量化处理)
+            T4f(逐条纠错编辑并保存)
+            T4a --> T4b --> T4c --> T4d --> T4e --> T4f
+        end
+
+        subgraph T5[提示词优化]
+            direction TB
+            T5a(在线查阅推荐提示词模板)
+            T5b(在线查阅审核提示词模板)
+            T5c(编辑提示词内容)
+            T5d(保存修改)
+            T5e(一键恢复默认)
+            T5f(修改即时生效)
+            T5a --> T5c
+            T5b --> T5c
+            T5c --> T5d --> T5f
+            T5c --> T5e --> T5f
+        end
+
+        subgraph T6[推荐方案数据库]
+            direction TB
+            T6a(展示高质量推荐配置列表)
+            T6b(删除过时推荐方案)
+            T6c(手动触发清洗任务)
+            T6d(提取论坛高赞内容生成推荐方案)
+            T6a --> T6b
+            T6a --> T6c --> T6d
+        end
+
+        subgraph T7[权重调整]
+            direction TB
+            T7a(查看推荐权重排名靠前的硬件清单)
+            T7b(查看最近权重调整记录)
+            T7c(分析社区反馈对排序策略的动态影响)
+            T7a --> T7b --> T7c
+        end
+    end
+
+    E -- 切换到API配置 --> T1a
+    E -- 切换到审核系统 --> T2a
+    E -- 切换到数据更新管理 --> T3a
+    E -- 切换到硬件数据 --> T4a
+    E -- 切换到提示词优化 --> T5a
+    E -- 切换到推荐方案数据库 --> T6a
+    E -- 切换到权重调整 --> T7a
+
+    T1d --> Z(完成配置并持续维护推荐系统)
+    T2d --> Z
+    T3f --> Z
+    T4f --> Z
+    T5f --> Z
+    T6d --> Z
+    T7c --> Z

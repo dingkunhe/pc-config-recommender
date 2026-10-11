@@ -1,0 +1,93 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "22px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#333333",
+    "lineColor": "#666666",
+    "textColor": "#222222"
+  }
+}}%%
+erDiagram
+    Hardware ||--o{ PriceHistory : 价格
+    Hardware ||--o{ HardwareWeightAdjustmentLog : 权重日志
+
+    User ||--o{ ChatSession : 会话
+    ChatSession ||--o{ ChatMessage : 消息
+
+    Hardware {
+        int 硬件ID PK
+        string 名称
+        string 类别
+        float 权重
+    }
+
+    PriceHistory {
+        int 记录ID PK
+        int 硬件ID FK
+        string 日期
+        float 价格
+    }
+
+    ApiConfig {
+        int 配置ID PK
+        string 名称
+        string 模型
+        bool 启用状态
+    }
+
+    AuditApiConfig {
+        int 配置ID PK
+        string 名称
+        string 模型
+        bool 启用状态
+    }
+
+    PromptConfig {
+        int 配置ID PK
+        text 推荐提示词
+        int 检索数
+        datetime 更新时间
+    }
+
+    User {
+        int 用户ID PK
+        string 用户名
+        string 密码
+    }
+
+    ChatSession {
+        int 会话ID PK
+        int 用户ID FK
+        string 标题
+        datetime 更新时间
+    }
+
+    ChatMessage {
+        int 消息ID PK
+        int 会话ID FK
+        string 角色
+        datetime 创建时间
+    }
+
+    ScraperRun {
+        int 任务ID PK
+        datetime 开始时间
+        datetime 结束时间
+        string 状态
+    }
+
+    RecommendedScheme {
+        int 方案ID PK
+        string 标题
+        string 来源类型
+        int 来源ID
+    }
+
+    HardwareWeightAdjustmentLog {
+        int 日志ID PK
+        int 硬件ID FK
+        string 来源类型
+        float 变化值
+        datetime 创建时间
+    }

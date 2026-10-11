@@ -1,0 +1,26 @@
+from django.db import migrations, models
+import django.db.models.deletion
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('api', '0013_hardware_brand'),
+        ('auth', '0012_alter_user_first_name_max_length'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='LikeNotification',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('target_type', models.CharField(choices=[('post', 'Post'), ('comment', 'Comment')], max_length=20)),
+                ('target_id', models.IntegerField()),
+                ('source_post_id', models.IntegerField(blank=True, null=True)),
+                ('is_read', models.BooleanField(default=False)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('actor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sent_like_notifications', to='auth.user')),
+                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='like_notifications', to='auth.user')),
+            ],
+        ),
+    ]

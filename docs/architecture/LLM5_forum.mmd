@@ -1,0 +1,109 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "22px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#333333",
+    "lineColor": "#666666",
+    "textColor": "#222222"
+  }
+}}%%
+erDiagram
+    User ||--o{ Post : 发布
+    User ||--o{ Comment : 评论
+    User ||--|| Profile : 资料
+
+    Post ||--o{ Comment : 含评论
+    Comment o|--o{ Comment : 回复
+
+    Post ||--o{ PostImage : 含图片
+    Post ||--o{ PostAttachment : 含附件
+    Comment ||--o{ CommentImage : 含图片
+    Comment ||--o{ CommentAttachment : 含附件
+
+    User ||--o{ LikeNotification : 点赞通知
+    User ||--o{ ReplyNotification : 回复通知
+    User ||--o{ SystemNotification : 系统通知
+
+    User ||--o{ Report : 发起举报
+    Post ||--o{ Report : 帖子被举报
+    Comment ||--o{ Report : 评论被举报
+
+    User {
+        int 用户ID PK
+        string 用户名
+        string 密码
+    }
+
+    Profile {
+        int 资料ID PK
+        int 用户ID FK
+        string 昵称
+        bool 封禁状态
+    }
+
+    Post {
+        int 帖子ID PK
+        string 标题
+        string 板块
+        string 审核状态
+    }
+
+    Comment {
+        int 评论ID PK
+        int 帖子ID FK
+        int 父评论ID FK
+        string 作者
+    }
+
+    PostImage {
+        int 图片ID PK
+        int 帖子ID FK
+        string 文件
+    }
+
+    PostAttachment {
+        int 附件ID PK
+        int 帖子ID FK
+        string 文件
+    }
+
+    CommentImage {
+        int 图片ID PK
+        int 评论ID FK
+        string 文件
+    }
+
+    CommentAttachment {
+        int 附件ID PK
+        int 评论ID FK
+        string 文件
+    }
+
+    LikeNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 目标类型
+        int 目标ID
+    }
+
+    ReplyNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 目标类型
+        int 目标ID
+    }
+
+    SystemNotification {
+        int 通知ID PK
+        int 接收者ID FK
+        string 标题
+        bool 已读
+    }
+
+    Report {
+        int 举报ID PK
+        string 举报类型
+        int 目标ID
+        int 举报人ID FK
+    }

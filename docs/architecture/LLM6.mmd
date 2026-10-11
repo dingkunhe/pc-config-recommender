@@ -1,0 +1,67 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "19px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#333333",
+    "lineColor": "#666666",
+    "textColor": "#222222"
+  }
+}}%%
+graph TB
+    A(App.vue<br/>全局布局与权限入口)
+    A1(左侧导航栏 / 顶部搜索栏 / 右侧内容区)
+    A2(登录注册逻辑)
+    A3(管理员入口权限 is_staff)
+
+    A --> A1 --> A2 --> A3
+
+    R1(RecommendForm.vue)
+    R2(Forum.vue)
+    R3(Manager.vue)
+    R4(Profile.vue)
+
+    A --> R1
+    A --> R2
+    A --> R3
+    A --> R4
+    A3 -.管理员可进入.-> R3
+
+    subgraph S1[RecommendForm.vue 智能推荐]
+        direction TB
+        RF1(会话管理<br/>新建/加载/删除)
+        RF2(需求输入)
+        RF3(推荐结果展示)
+        RF4(一键转发至论坛)
+        RF1 --> RF2 --> RF3 --> RF4
+    end
+
+    subgraph S2[Forum.vue 论坛]
+        direction TB
+        F1(帖子列表浏览)
+        F2(帖子详情查看)
+        F3(评论与楼中楼回复)
+        F4(点赞与举报)
+        F1 --> F2 --> F3 --> F4
+    end
+
+    subgraph S3[Manager.vue 管理]
+        direction TB
+        M1(论坛管理模式<br/>恢复删帖/封禁管理/举报管理/AI封禁)
+        M2(推荐系统模式<br/>API配置/审核系统/数据更新/硬件数据<br/>提示词优化/方案数据库/权重调整)
+        M1 --> M2
+    end
+
+    subgraph S4[Profile.vue 个人中心]
+        direction TB
+        P1(资料查看编辑)
+        P2(头像上传)
+        P3(密码修改)
+        P4(管理员激活入口)
+        P1 --> P2 --> P3 --> P4
+    end
+
+    R1 --> S1
+    R2 --> S2
+    R3 --> S3
+    R4 --> S4

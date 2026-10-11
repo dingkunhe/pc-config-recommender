@@ -1,0 +1,58 @@
+graph TD
+    %% 样式定义
+    classDef frontStyle fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
+    classDef backStyle fill:#e8f5e9,stroke:#43a047,stroke-width:2px
+    classDef persistStyle fill:#fff3e0,stroke:#fb8c00,stroke-width:2px
+    classDef externStyle fill:#fce4ec,stroke:#e53935,stroke-width:2px
+
+    %% 前端表示层
+    subgraph front [🖥️ 前端表示层 - Vue 3]
+        UserUI("用户端页面<br/>（论坛内容展示 / 交互）")
+        AdminUI("管理后台页面<br/>（后台管理界面）")
+    end
+
+    %% 后端业务层
+    subgraph back [⚙️ 后端业务层 - Django]
+        Auth("用户认证")
+        Post("帖子评论处理")
+        Rec("推荐逻辑")
+        Report("举报审核")
+        Crawler("爬虫调度")
+        Clean("数据清洗")
+    end
+
+    %% 数据库持久层
+    subgraph persist [🗄️ 数据库持久层 - MySQL]
+        MySQL("MySQL 数据库<br/>（结构化数据 & 硬件知识）")
+    end
+
+    %% 外部服务层
+    subgraph extern [🌐 外部服务层]
+        LLM("大模型 API")
+        Target("目标站点网页资源")
+    end
+
+    %% 层间调用与数据流
+    UserUI --> Auth
+    UserUI --> Post
+    UserUI --> Rec
+
+    AdminUI --> Report
+    AdminUI --> Crawler
+    AdminUI --> Clean
+    AdminUI --> Rec
+
+    Auth --> MySQL
+    Post --> MySQL
+    Rec --> MySQL
+    Rec --> LLM
+    Report --> MySQL
+    Crawler --> Target
+    Crawler --> Clean
+    Clean --> MySQL
+
+    %% 应用样式到各层
+    class UserUI,AdminUI frontStyle
+    class Auth,Post,Rec,Report,Crawler,Clean backStyle
+    class MySQL persistStyle
+    class LLM,Target externStyle
