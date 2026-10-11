@@ -296,36 +296,14 @@ python -c "from sentence_transformers import SentenceTransformer; SentenceTransf
 - **管理员激活入口默认关闭**：`ADMIN_ACTIVATE_CODE` 留空时 `activate-admin/` 接口不可用，避免固定口令提权。
 - **爬虫合规**：遵守目标站点 robots 规则并限频。
 
-已知的开发期默认值（部署前需收紧，见「后续改进」）：
+已知的开发期默认值（部署前需收紧）：
 
 - `DJANGO_DEBUG` 默认 `1`，`DJANGO_ALLOWED_HOSTS` 默认 `*`，`CORS_ALLOW_ALL_ORIGINS = True`、`CORS_ALLOW_CREDENTIALS = True`。
 - `ADMIN_KEY` 的兜底默认值为 `changeme`。
 
 ---
 
-## 十、已知限制与后续改进
-
-这是一份毕业设计，以下问题已明确识别，是后续迭代的方向：
-
-| 类别 | 问题 | 改进方向 |
-|---|---|---|
-| 正确性 | `views.py` 中 `format_table_view`、`admin_schemes_view`、`admin_delete_scheme_view`、`trigger_daily_clean_view` 各存在重复定义，靠后定义覆盖靠前 | 去重并补单元测试 |
-| 死代码 | `views.py` 中 `from src.scraper import scrape_urls`，但项目无 `src/` 目录，`scrape_view` 恒返回不可用 | 删除该分支 |
-| 性能 | `posts_view` / `post_detail_view` 存在 N+1 查询，无 `select_related` / `prefetch_related`，且未分页 | 查询优化 + 分页 |
-| 性能 | 推荐接口为同步串行长链路（最多 5 次模型调用），无流式输出 | 改流式（SSE）响应 |
-| 性能 | `admin_hardware_view` 在 Python 层做品牌/价格/关键词过滤，全表遍历 | 下推到 ORM 查询 |
-| 安全 | `ApiConfig.api_key` 明文存储且明文回传前端 | 加密存储 + 回传脱敏 |
-| 安全 | 前端 `v-html` 直接渲染 `marked.parse()` 结果，未做 HTML 消毒 | 引入 DOMPurify |
-| 安全 | 注册接口无格式校验、密码强度校验与防刷 | 补充校验与限流 |
-| 健壮性 | LLM 重试判断依赖错误信息字符串匹配（`'429' in err`） | 改用状态码与异常类型 |
-| 健壮性 | BGE 模型加载无线程锁，并发首请求可能重复加载 | 加锁 + 懒加载单例 |
-| 数据模型 | `PriceHistory.date` 用 `CharField` 存日期而非 `DateField` | 迁移为 `DateField` |
-| 部署 | 定时任务仅在 `RUN_MAIN == 'true'` 时启动，仅适配 `runserver` | 拆分为独立 worker 或 Celery |
-| 工程 | 前端 API 地址硬编码 `http://localhost:8000` | 改用 Vite 环境变量 |
-
----
-
-## 十一、文档
+## 十、文档
 
 - [`说明文档.md`](说明文档.md) — 逐文件、逐代码块的实现说明（含每个接口与模型的职责）
 - [`参数.md`](参数.md) — 14 类硬件的参数字段定义
@@ -334,7 +312,7 @@ python -c "from sentence_transformers import SentenceTransformer; SentenceTransf
 
 ---
 
-## 十二、许可
+## 十一、许可
 
 本项目采用 MIT License，详见 [LICENSE](LICENSE)。
 
