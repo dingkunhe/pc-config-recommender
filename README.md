@@ -175,7 +175,7 @@ pc-config-recommender/
 ├── requirements.txt
 ├── robots.md                        # 爬虫遵守的 robots 规则
 ├── 参数.md                           # 14 类硬件的参数字段定义
-└── 说明文档.md                       # 逐文件、逐代码块的详细说明（403 行）
+└── 说明文档.md                       # 逐文件、逐代码块的详细说明（621 行）
 ```
 
 ---
